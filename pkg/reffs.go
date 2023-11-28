@@ -17,14 +17,15 @@ package pkg
 import (
 	"bytes"
 	"fmt"
-	"github.com/go-git/go-billy/v5"
-	"github.com/gravypod/gitfs/pkg/gitism"
 	"io/fs"
 	"log"
 	"os"
 	"path/filepath"
 	"strconv"
 	"time"
+
+	"github.com/go-git/go-billy/v5"
+	"github.com/gravypod/gitfs/pkg/gitism"
 )
 
 type gitFileInfo struct {
@@ -150,12 +151,9 @@ func (s ReferenceFileSystem) lsTree(path FilePath, children bool, handler func(f
 		relativePath += SeparatorString
 	}
 
-	branch := "master"
 	gitPath := GitPath{
-		Reference: GitReference{
-			Branch: &branch,
-		},
-		TreePath: relativePath,
+		Reference: s.reference,
+		TreePath:  relativePath,
 	}
 
 	return s.git.ListTree(gitPath, func(entry gitism.TreeEntry) error {

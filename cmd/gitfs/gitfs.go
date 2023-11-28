@@ -17,14 +17,16 @@ package main
 import (
 	"context"
 	"flag"
-	gitfs "github.com/gravypod/gitfs/pkg"
-	"github.com/jacobsa/fuse"
 	"log"
 	"os"
 	"path/filepath"
+
+	gitfs "github.com/gravypod/gitfs/pkg"
+	"github.com/jacobsa/fuse"
 )
 
 var (
+	branch              = flag.String("branch", "", "Branch to mount.")
 	repositoryDirectory = flag.String("git-dir", "", "Path to bare git repo to serve.")
 	mountPath           = flag.String("mount", "/tmp/gitfs", "Location to mount gitfs. You must have write access to this directory.")
 )
@@ -69,8 +71,7 @@ func main() {
 			err)
 	}
 
-	branch := "master"
-	fs := gitfs.NewReferenceFileSystem(git, gitfs.GitReference{Branch: &branch})
+	fs := gitfs.NewReferenceFileSystem(git, gitfs.GitReference{Branch: branch})
 
 	server, err := gitfs.NewBillyFuseServer(fs)
 	if err != nil {
